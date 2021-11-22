@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+//    id 'com.google.ar.sceneform.plugin'
 }
 
 android {
@@ -33,6 +34,11 @@ android {
     viewBinding {
         enabled true
     }
+
+//    sceneform.asset('sampledata/models/andy.obj', // Source Asset Path
+//            'default',                            // Material Path
+//            'sampledata/models/andy.sfa',         // .sfa Output Path
+//            'src/main/res/raw/andy')              // .sfb Output Path
 }
 
 dependencies {
@@ -56,4 +62,6 @@ dependencies {
     // https://github.com/javagl/Obj
     implementation 'de.javagl:obj:0.3.0'
 
+    // sceneform
+    implementation("com.gorisse.thomas.sceneform:sceneform:1.20.1")
 }
