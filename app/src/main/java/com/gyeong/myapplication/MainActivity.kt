@@ -65,7 +65,11 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         binding.btn.setOnClickListener {
             val intent = Intent(this, OpenGlActivity::class.java)
             startActivity(intent)
-            finish()
+        }
+
+        binding.btn2.setOnClickListener {
+            val intent = Intent(this, OpenGlArcore::class.java)
+            startActivity(intent)
         }
 
         setupTapDetector()
@@ -84,7 +88,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         ) == PackageManager.PERMISSION_GRANTED)
     }
 
-    private val permissionLauncher: ActivityResultLauncher<String> = registerForActivityResult(
+    val permissionLauncher: ActivityResultLauncher<String> = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
@@ -185,33 +189,33 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f)
 
         // Prepare the rendering objects. This involves reading shaders, so may throw an IOException.
-        vikingObject.createOnGlThread(
-            this@MainActivity,
-            getString(R.string.model_viking_obj),
-            getString(R.string.model_viking_png)
-        )
-
-        cannonObject.createOnGlThread(
-            this@MainActivity,
-            getString(R.string.model_cannon_obj),
-            getString(R.string.model_cannon_png)
-        )
-
-        targetObject.createOnGlThread(
-            this@MainActivity,
-            getString(R.string.model_target_obj),
-            getString(R.string.model_target_png)
-        )
-
-        targetObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
-        vikingObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
-        cannonObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+//        vikingObject.createOnGlThread(
+//            this@MainActivity,
+//            getString(R.string.model_viking_obj),
+//            getString(R.string.model_viking_png)
+//        )
+//
+//        cannonObject.createOnGlThread(
+//            this@MainActivity,
+//            getString(R.string.model_cannon_obj),
+//            getString(R.string.model_cannon_png)
+//        )
+//
+//        targetObject.createOnGlThread(
+//            this@MainActivity,
+//            getString(R.string.model_target_obj),
+//            getString(R.string.model_target_png)
+//        )
+//
+//        targetObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+//        vikingObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
+//        cannonObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f)
 
         try {
             // Create the texture and pass it to ARCore session to be filled during update().
             backgroundRenderer.createOnGlThread(this@MainActivity)
-            planeRenderer.createOnGlThread(this@MainActivity, getString(R.string.model_grid_png))
-            pointCloudRenderer.createOnGlThread(this@MainActivity)
+//            planeRenderer.createOnGlThread(this@MainActivity, getString(R.string.model_grid_png))
+//            pointCloudRenderer.createOnGlThread(this@MainActivity)
 
             // TODO - set up the objects
         } catch (e: IOException) {
@@ -269,7 +273,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
                 val camera = frame.camera
 
                 // Handle one tap per frame.
-                handleTap(frame, camera)
+//                handleTap(frame, camera)
                 drawBackground(frame)
 
                 // Keeps the screen unlocked while tracking, but allow it to lock when tracking stops.
@@ -283,7 +287,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
                 val lightIntensity = computeLightIntensity(frame)
 
                 visualizeTrackedPoints(frame, projectionMatrix, viewMatrix)
-                checkPlaneDetected()
+//                checkPlaneDetected()
                 visualizePlanes(camera, projectionMatrix)
 
                 drawObject(
@@ -294,24 +298,24 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
                     viewMatrix,
                     lightIntensity
                 )
-
-                drawObject(
-                    cannonObject,
-                    cannonAttachment,
-                    Mode.CANNON.scaleFactor,
-                    projectionMatrix,
-                    viewMatrix,
-                    lightIntensity
-                )
-
-                drawObject(
-                    targetObject,
-                    targetAttachment,
-                    Mode.TARGET.scaleFactor,
-                    projectionMatrix,
-                    viewMatrix,
-                    lightIntensity
-                )
+//
+//                drawObject(
+//                    cannonObject,
+//                    cannonAttachment,
+//                    Mode.CANNON.scaleFactor,
+//                    projectionMatrix,
+//                    viewMatrix,
+//                    lightIntensity
+//                )
+//
+//                drawObject(
+//                    targetObject,
+//                    targetAttachment,
+//                    Mode.TARGET.scaleFactor,
+//                    projectionMatrix,
+//                    viewMatrix,
+//                    lightIntensity
+//                )
             } catch (t: Throwable) {
                 Log.e(TAG, "오브젝트 그리는데 에러남")
             }
@@ -404,21 +408,21 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         viewMatrix: FloatArray
     ) {
         // Use try-with-resources to automatically release the point cloud.
-        frame.acquirePointCloud().use { pointCloud ->
-            pointCloudRenderer.update(pointCloud)
-            pointCloudRenderer.draw(viewMatrix, projectionMatrix)
-        }
+//        frame.acquirePointCloud().use { pointCloud ->
+//            pointCloudRenderer.update(pointCloud)
+//            pointCloudRenderer.draw(viewMatrix, projectionMatrix)
+//        }
     }
 
     /**
      *  Visualizes planes.
      */
     private fun visualizePlanes(camera: Camera, projectionMatrix: FloatArray) {
-        planeRenderer.drawPlanes(
-            session!!.getAllTrackables(Plane::class.java),
-            camera.displayOrientedPose,
-            projectionMatrix
-        )
+//        planeRenderer.drawPlanes(
+//            session!!.getAllTrackables(Plane::class.java),
+//            camera.displayOrientedPose,
+//            projectionMatrix
+//        )
     }
 
     /**
