@@ -3,8 +3,8 @@ package com.gyeong.myapplication
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.camera2.CameraDevice
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat
 import com.google.ar.core.*
 import com.gyeong.myapplication.databinding.ActivityMainBinding
 import com.gyeong.myapplication.helpers.DisplayRotationHelper
-import com.gyeong.myapplication.helpers.SnackbarHelper
 import com.gyeong.myapplication.helpers.TrackingStateHelper
 import com.gyeong.myapplication.rendering.*
 import java.io.IOException
@@ -58,9 +57,16 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.d(TAG, "메인액티비티 생성")
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        binding.btn.setOnClickListener {
+            val intent = Intent(this, OpenGlActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         setupTapDetector()
         setupSurfaceView()
@@ -101,11 +107,13 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
                 if (!hasCameraPermission(this)) {
                     permissionLauncher.launch(Manifest.permission.CAMERA)
+                } else {
+                    session = Session(this)
                 }
             }
         } catch (e: Exception) {
             Toast.makeText(this, "exception: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-            Log.d(TAG, "${e.localizedMessage}")
+            Log.e(TAG, "${e.localizedMessage}")
         }
     }
 
@@ -351,7 +359,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         // 기존에 previousAttachment가 있으면 remove 시키기
         previousAttachment?.anchor?.detach()
 
-        // 화면을 hilt 한 위치를 plane으로, 거기에 anchor을 내림
+        // 화면을 hit 한 위치를 plane으로, 거기에 anchor을 내림
         val plane = hit.trackable as Plane
         val anchor = session!!.createAnchor(hit.hitPose)
 
@@ -363,14 +371,14 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         backgroundRenderer.draw(frame)
     }
 
-    private fun computeProjectionMatrix(camera: Camera): FloatArray {
+    fun computeProjectionMatrix(camera: Camera): FloatArray {
         val projectionMatrix = FloatArray(maxAllocationSize)
         camera.getProjectionMatrix(projectionMatrix, 0, 0.1f, 100.0f)
 
         return projectionMatrix
     }
 
-    private fun computeViewMatrix(camera: Camera): FloatArray {
+    fun computeViewMatrix(camera: Camera): FloatArray {
         val viewMatrix = FloatArray(maxAllocationSize)
         camera.getViewMatrix(viewMatrix, 0)
 
@@ -380,7 +388,7 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     /**
      * Compute lighting from average intensity of the image.
      */
-    private fun computeLightIntensity(frame: Frame): FloatArray {
+    fun computeLightIntensity(frame: Frame): FloatArray {
         val lightIntensity = FloatArray(4)
         frame.lightEstimate.getColorCorrection(lightIntensity, 0)
 
@@ -443,6 +451,6 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     }
 
     companion object {
-        const val TAG = "MainActivity"
+        const val TAG = "메인액티비티"
     }
 }
