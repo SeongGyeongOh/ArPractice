@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity(), GLSurfaceView.Renderer {
         displayRotationHelper = DisplayRotationHelper(this)
 
         installRequested = false
+
+        if (hasCameraPermission(this)) {
+            session = Session(this)
+        }
     }
 
     fun hasCameraPermission(activity: Activity?): Boolean {
